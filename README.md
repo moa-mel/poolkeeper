@@ -10,6 +10,9 @@ Poolkeeper is a DeFi-inspired strategy simulation game where players take on the
 
 Poolkeeper is a simulation game. All resources, market events, and rewards are simulated. No real cryptocurrency or on-chain transactions are involved.
 
+### Run Live
+https://poolkeeper.onrender.com
+
 ### Run Locally
 
 **Requirements:** Node.js 20+ and npm.
