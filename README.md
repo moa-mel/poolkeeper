@@ -1,75 +1,121 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# Poolkeeper — The Liquidity Wars
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Poolkeeper is a DeFi-inspired strategy simulation game where players take on the role of liquidity pool managers. Your mission is to manage resources, respond to unpredictable market conditions, and keep your liquidity pool healthy through five challenging rounds.
 
-## React Compiler
+## How to Test
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**No account, wallet connection, private key, or faucet is required.**
 
-## Expanding the ESLint configuration
+Poolkeeper is a simulation game. All resources, market events, and rewards are simulated. No real cryptocurrency or on-chain transactions are involved.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Run Locally
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**Requirements:** Node.js 20+ and npm.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Clone the repository:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+git clone https://github.com/moa-mel/poolkeeper.git
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+2. Navigate into the project:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+cd poolkeeper
 ```
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+4. Start the development server:
+
+```bash
+npm run dev
+```
+
+5. Open the local URL displayed in your terminal (usually `http://localhost:5173`).
+
+### Test the Gameplay
+
+1. Launch the game and start a new session.
+2. Allocate your available energy across staking, liquidity, and reserves.
+3. Review the market event presented in each round.
+4. Make decisions based on the event and your pool's current condition.
+5. Monitor changes in pool health, liquidity depth, slippage, and simulated rewards.
+6. Complete all five rounds and review your final score.
+7. Restart the game and experiment with different resource allocations to see how your decisions affect the outcome.
+
+### Verify the Build
+
+Run the following commands to check the project:
+
+```bash
+npm run build
+npm run lint
+```
+
+## Gameplay
+
+Players must balance three important resources:
+
+- **Stake:** Allocate resources toward staking and simulated rewards.
+- **Liquidity:** Maintain pool depth and help reduce slippage.
+- **Reserve:** Keep resources available to respond to unexpected market events.
+
+Throughout the game, players encounter simulated market conditions such as:
+
+- Market volatility.
+- Large trades.
+- Liquidity withdrawals.
+- Unexpected attacks.
+
+Every decision affects the pool's condition. Poor resource allocation can put the pool at risk, while strategic decisions help maintain stability and survive all five rounds.
+
+## Features
+
+- Interactive resource allocation.
+- Dynamic market event scenarios.
+- Real-time pool health monitoring.
+- Liquidity depth and slippage tracking.
+- Simulated staking rewards.
+- Five-round survival challenge.
+- End-of-game scoring and results.
+
+## Tech Stack
+
+- **React** — User interface.
+- **TypeScript** — Type safety.
+- **Vite** — Development and build tooling.
+- **Zustand** — Game state management.
+- **Tailwind CSS** — Styling.
+- **Lucide React** — Icons.
+
+## Project Structure
+
+```text
+src/
+├── components/
+├── pages/
+├── services/
+├── store/
+├── types/
+└── App.tsx
+```
+
+## Important Note
+
+Poolkeeper is an educational strategy simulation and hackathon prototype. It demonstrates simplified liquidity-management concepts. It does not connect to a blockchain, execute real financial transactions, or distribute real cryptocurrency rewards.
+
+## Contributing
+
+Contributions, suggestions, and feedback are welcome.
+
+---
+
+**Poolkeeper — Manage the liquidity. Survive the market.**
+
