@@ -11,7 +11,7 @@ export async function generateMarketEvent(
   // Simulate an event-generation delay.
   await new Promise((resolve) => setTimeout(resolve, 400));
 
-  const event = getRandomEvent();
+  const event = getRandomEvent(round);
 
   return {
     ...event,

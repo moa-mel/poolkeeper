@@ -1623,3 +1623,93 @@ button:disabled {
   }
 }
 
+.crisis-page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.crisis-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.crisis-metric {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.crisis-metric > div {
+  color: var(--accent, #7dd3fc);
+}
+
+.crisis-metric > span {
+  color: var(--muted, #94a3b8);
+  font-size: 0.85rem;
+}
+
+.crisis-metric > strong {
+  font-size: 1.5rem;
+}
+
+.crisis-event,
+.crisis-history,
+.crisis-result {
+  display: grid;
+  gap: 1rem;
+}
+
+.crisis-pressure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border, #334155);
+}
+
+.crisis-pressure span {
+  color: var(--muted, #94a3b8);
+  font-size: 0.75rem;
+}
+
+.crisis-pressure strong {
+  margin-right: 1rem;
+}
+
+.crisis-slider {
+  margin-top: 1.25rem;
+}
+
+.crisis-history p {
+  margin: 0;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border, #334155);
+}
+
+.crisis-result-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--border, #334155);
+  border-radius: 0.75rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .crisis-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+

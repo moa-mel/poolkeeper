@@ -9,7 +9,6 @@ import {
   Shield,
   Percent,
   Rocket,
-  ExternalLink,
 } from "lucide-react";
 
 import type { GameState } from "../game/game.types";
@@ -35,8 +34,18 @@ export default function GameResults({
         </div>
 
         <span className="eyebrow">
-          {won ? "INSTANT LAUNCH GRADUATED" : "MISSION FAILED"}
+          {won ? "STRATEGY SESSION COMPLETE" : "STRATEGY FAILED"}
         </span>
+
+        <h1>
+          {won ? "Strong graduation path found" : "This allocation path collapsed"}
+        </h1>
+
+        <p className="results-description">
+          {won
+            ? "Your strategy survived all pressure events and maintained a healthy path to the 85 SOL Instant Launch target."
+            : "This allocation strategy could not protect the bonding curve. Try a more defensive mix next time."}
+        </p>
 
         <h1>
           {won ? "Token graduated!" : "Pool collapsed"}
@@ -80,41 +89,15 @@ export default function GameResults({
         </div>
 
         {/* Strong CTA for Loadout Instant Launch */}
-        <div className="loadout-cta" style={{
-          margin: "2rem 0",
-          padding: "1.5rem",
-          borderRadius: "12px",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
-          border: "1px solid #334155",
-          textAlign: "center"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-            <Rocket size={20} />
-            <strong style={{ fontSize: "1.1rem" }}>Ready for the real thing?</strong>
-          </div>
-          <p style={{ marginBottom: "1rem", opacity: 0.9, fontSize: "0.95rem" }}>
-            You just simulated a Loadout Instant Launch.<br />
-            Launch your own game token for real — self-service, no curation required.
+        <div className="loadout-cta">
+          <Rocket size={20} />
+          <strong>Ready to use this strategy for real?</strong>
+          <p>
+            Take these recommendations into your actual Instant Launch on Loadout.
           </p>
-          <a
-            href="https://app.loadout.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="primary-button"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              textDecoration: "none",
-              padding: "0.75rem 1.5rem"
-            }}
-          >
-            Launch on Loadout Instant Launch
-            <ExternalLink size={16} />
+          <a href="https://app.loadout.xyz" target="_blank" rel="noopener noreferrer">
+            Open Loadout Instant Launch
           </a>
-          <p style={{ marginTop: "0.75rem", fontSize: "0.8rem", opacity: 0.7 }}>
-            app.loadout.xyz · Instant Launch · 85 SOL graduation target
-          </p>
         </div>
 
         <div className="history-section">

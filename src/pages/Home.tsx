@@ -11,10 +11,11 @@ import GameHeader from "../components/GameHeader";
 
 interface Props {
   onStart: () => void;
+  onStartCrisis: () => void;
   loading: boolean;
 }
 
-export default function Home({ onStart, loading }: Props) {
+export default function Home({ onStart, onStartCrisis, loading }: Props) {
   return (
     <div className="app-shell">
       <GameHeader />
@@ -61,6 +62,13 @@ export default function Home({ onStart, loading }: Props) {
             <div className="preview-header">
               <div>
                 <span>INSTANT LAUNCH OVERVIEW</span>
+                <button
+                  className="secondary-button hero-button"
+                  onClick={onStartCrisis}
+                >
+                  Play Game Economy Crisis Mode
+                  <ArrowRight size={19} />
+                </button>
                 <strong>Bonding curve dashboard</strong>
               </div>
               <span className="preview-status">
