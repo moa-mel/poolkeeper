@@ -11,6 +11,7 @@ export default function App() {
   const game = useGameStore((state) => state.game);
   const startGame = useGameStore((state) => state.startGame);
   const resetGame = useGameStore((state) => state.resetGame);
+  const isLoadingEvent = useGameStore((state) => state.isLoadingEvent);
 
   if (showCrisis) {
     return <CrisisMode onBack={() => setShowCrisis(false)} />;
@@ -36,7 +37,7 @@ export default function App() {
     <Home
       onStart={startGame}
       onStartCrisis={() => setShowCrisis(true)}
-      loading={false}
+      loading={isLoadingEvent}
     />
   );
 }

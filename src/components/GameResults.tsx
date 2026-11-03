@@ -3,7 +3,6 @@ import {
   RotateCcw,
   ShieldCheck,
   Coins,
-  Activity,
   TrendingUp,
   Waves,
   Shield,
@@ -12,7 +11,7 @@ import {
 } from "lucide-react";
 
 import type { GameState } from "../game/game.types";
-import { getRank, getAverageHealth } from "../game/game.scoring";
+import { getRank} from "../game/game.scoring";
 
 interface Props {
   game: GameState;
@@ -62,13 +61,13 @@ export default function GameResults({
           <ResultStat
             icon={<Trophy />}
             label="FINAL SCORE"
-             value={`${game.graduationSol.toFixed(1)} / 85 SOL`}
+            value={game.score.toLocaleString()}
           />
 
           <ResultStat
-            icon={<Activity />}
-            label="AVERAGE HEALTH"
-            value={`${getAverageHealth(game)}%`}
+            icon={<Rocket />}
+            label="SIMULATED GRADUATION"
+            value={`${game.graduationSol.toFixed(1)} / 85`}
           />
 
           <ResultStat
@@ -149,7 +148,7 @@ export default function GameResults({
                   <span>Resource allocation</span>
 
                   <div className="allocation-breakdown">
-                    <span>Buyback/Stake: {item.allocation.stake}</span>
+                    <span>Staking: {item.allocation.stake}</span>
                     <span>Curve Liquidity: {item.allocation.liquidity}</span>
                     <span>Anti-Snipe: {item.allocation.reserve}</span>
                   </div>

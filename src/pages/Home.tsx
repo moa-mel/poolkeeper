@@ -125,7 +125,7 @@ export default function Home({ onStart, onStartCrisis, loading }: Props) {
           <div className="feature-grid">
             <Feature
               icon={<Lock />}
-              title="Studio Buyback / Staking"
+              title="Staking"
               description="Allocate to buybacks or staker rewards. Protects long-term value after graduation."
               color="green"
             />
@@ -157,7 +157,7 @@ export default function Home({ onStart, onStartCrisis, loading }: Props) {
           </div>
 
           <button onClick={onStart} disabled={loading}>
-            Start simulation <ArrowRight size={17} />
+            {loading ? "Starting..." : "Start Simulation"}
           </button>
         </section>
 
