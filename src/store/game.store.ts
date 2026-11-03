@@ -12,7 +12,7 @@ import {
 } from "../game/game.constants";
 
 import { processRound } from "../game/game.engine";
-import { generateMarketEvent } from "../services/ai.service";
+import { getRandomEvent } from "../game/game.events";
 
 interface GameStore {
   game: GameState;
@@ -31,19 +31,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
   error: null,
 
   startGame: async () => {
+    const initialGame: GameState = {
+      ...INITIAL_STATE,
+      status: "playing",
+      allocation: { ...INITIAL_ALLOCATION },
+      history: [],
+    };
+
     set({
-      game: {
-        ...INITIAL_STATE,
-        status: "playing",
-        allocation: { ...INITIAL_ALLOCATION },
-        history: [],
-      },
+      game: initialGame,
       isLoadingEvent: true,
       error: null,
     });
 
     try {
-      const event = await generateMarketEvent(1);
+      const event = getRandomEvent(
+        initialGame.round,
+        initialGame.history
+      );
 
       set((state) => ({
         game: {
@@ -70,43 +75,51 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   submitRound: async () => {
-    const { game } = get();
+    const { game, isLoadingEvent } = get();
 
     if (
       game.status !== "playing" ||
       !game.currentEvent ||
-      get().isLoadingEvent
+      isLoadingEvent
     ) {
       return;
     }
 
     try {
+      // Process the current round.
       const nextState = processRound(
         game,
         game.allocation,
         game.currentEvent
       );
 
-      set({
-        game: nextState,
-        error: null,
-      });
+      // No more events are needed after winning or losing.
+      if (nextState.status !== "playing") {
+        set({
+          game: nextState,
+          error: null,
+          isLoadingEvent: false,
+        });
 
-      if (nextState.status !== "playing") return;
+        return;
+      }
 
+      // Generate the next event using the complete game history.
       set({ isLoadingEvent: true });
 
-      const nextEvent = await generateMarketEvent(
-        nextState.round
+      const nextEvent = getRandomEvent(
+        nextState.round,
+        nextState.history
       );
 
-      set((state) => ({
+      set({
         game: {
-          ...state.game,
+          ...nextState,
           currentEvent: nextEvent,
         },
         isLoadingEvent: false,
-      }));
+        error: null,
+      });
     } catch (error) {
       set({
         error:

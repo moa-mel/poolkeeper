@@ -8,35 +8,56 @@ interface Props {
   disabled?: boolean;
 }
 
+type AllocationKey = keyof Allocation;
+
 export default function ResourceAllocation({
   allocation,
   onChange,
   disabled = false,
 }: Props) {
-  const update = (
-    key: "stake" | "liquidity",
-    value: number
-  ) => {
+  const update = (key: AllocationKey, value: number) => {
     const safeValue = Math.max(0, Math.min(100, value));
 
-    const otherKey =
-      key === "stake" ? "liquidity" : "stake";
+    const remaining = 100 - safeValue;
 
-    const otherValue = Math.min(
-      allocation[otherKey],
-      100 - safeValue
+    const otherKeys = (
+      ["stake", "liquidity", "reserve"] as AllocationKey[]
+    ).filter((item) => item !== key);
+
+    const otherTotal = otherKeys.reduce(
+      (sum, item) => sum + allocation[item],
+      0
     );
 
-    const next = {
-      ...allocation,
-      [key]: safeValue,
-      [otherKey]: otherValue,
-    };
+    let next: Allocation;
 
-    next.reserve = 100 - next.stake - next.liquidity;
+    if (otherTotal === 0) {
+      // Split remaining units equally if the other allocations are zero.
+      next = {
+        ...allocation,
+        [key]: safeValue,
+        [otherKeys[0]]: Math.floor(remaining / 2),
+        [otherKeys[1]]: remaining - Math.floor(remaining / 2),
+      };
+    } else {
+      // Redistribute remaining units proportionally.
+      const firstValue = Math.round(
+        (allocation[otherKeys[0]] / otherTotal) * remaining
+      );
+
+      next = {
+        ...allocation,
+        [key]: safeValue,
+        [otherKeys[0]]: firstValue,
+        [otherKeys[1]]: remaining - firstValue,
+      };
+    }
 
     onChange(next);
   };
+
+  const total =
+    allocation.stake + allocation.liquidity + allocation.reserve;
 
   return (
     <section className="panel allocation-panel">
@@ -58,7 +79,7 @@ export default function ResourceAllocation({
           title="Stake"
           description="Lock energy to accumulate rewards."
           value={allocation.stake}
-          icon={<Lock />}
+          icon={<Lock size={19} />}
           color="green"
           onChange={(value) => update("stake", value)}
           disabled={disabled}
@@ -68,45 +89,26 @@ export default function ResourceAllocation({
           title="Liquidity"
           description="Strengthen the pool and reduce slippage."
           value={allocation.liquidity}
-          icon={<Waves />}
+          icon={<Waves size={19} />}
           color="blue"
           onChange={(value) => update("liquidity", value)}
           disabled={disabled}
         />
 
-        <div className="allocation-item reserve-item">
-          <div className="allocation-info">
-            <div className="allocation-icon amber">
-              <Shield size={19} />
-            </div>
-            <div>
-              <strong>Reserve</strong>
-              <p>Protect against market events.</p>
-            </div>
-          </div>
-
-          <div className="allocation-number">
-            {allocation.reserve}
-            <small>units</small>
-          </div>
-
-          <div className="allocation-track">
-            <div
-              className="allocation-fill amber-fill"
-              style={{ width: `${allocation.reserve}%` }}
-            />
-          </div>
-        </div>
+        <AllocationSlider
+          title="Reserve"
+          description="Protect against market events."
+          value={allocation.reserve}
+          icon={<Shield size={19} />}
+          color="amber"
+          onChange={(value) => update("reserve", value)}
+          disabled={disabled}
+        />
       </div>
 
       <div className="allocation-total">
         <span>Total allocated</span>
-        <strong>
-          {allocation.stake +
-            allocation.liquidity +
-            allocation.reserve}
-          /100
-        </strong>
+        <strong>{total}/100</strong>
       </div>
     </section>
   );
@@ -137,6 +139,7 @@ function AllocationSlider({
         <div className={`allocation-icon ${color}`}>
           {icon}
         </div>
+
         <div>
           <strong>{title}</strong>
           <p>{description}</p>
@@ -144,7 +147,8 @@ function AllocationSlider({
       </div>
 
       <div className="allocation-number">
-        {value}<small>units</small>
+        {value}
+        <small>units</small>
       </div>
 
       <input
@@ -155,9 +159,7 @@ function AllocationSlider({
         value={value}
         disabled={disabled}
         className={`resource-slider ${color}`}
-        onChange={(event) =>
-          onChange(Number(event.target.value))
-        }
+        onChange={(event) => onChange(Number(event.target.value))}
       />
 
       <div className="slider-labels">

@@ -6,6 +6,9 @@ import {
   Coins,
   Activity,
   TrendingUp,
+  Waves,
+  Shield,
+  Percent,
 } from "lucide-react";
 
 import type { GameState } from "../game/game.types";
@@ -74,18 +77,85 @@ export default function GameResults({
         </div>
 
         <div className="history-section">
-          <h3>Mission history</h3>
-
-          {game.history.map((item) => (
-            <div className="history-row" key={item.round}>
-              <span>ROUND {item.round}</span>
-              <span>{item.event}</span>
-              <strong>{item.poolHealth}% health</strong>
+          <div className="history-heading">
+            <div>
+              <h3>Mission history</h3>
+              <p>Round-by-round pool performance and resource allocation.</p>
             </div>
-          ))}
+
+            <span className="history-count">
+              {game.history.length}/5 ROUNDS
+            </span>
+          </div>
+
+          <div className="detailed-history">
+            {game.history.map((item) => (
+              <article
+                className="detailed-history-card"
+                key={item.round}
+              >
+                <div className="detailed-history-header">
+                  <div>
+                    <span className="round-label">
+                      ROUND {item.round}
+                    </span>
+                    <h4>{item.event}</h4>
+                  </div>
+
+                  <span className="round-health">
+                    {item.poolHealth.toFixed(1)}% health
+                  </span>
+                </div>
+
+                <div className="history-metrics">
+                  <HistoryMetric
+                    icon={<Waves size={16} />}
+                    label="Liquidity"
+                    value={item.liquidity.toFixed(2)}
+                  />
+
+                  <HistoryMetric
+                    icon={<Percent size={16} />}
+                    label="Slippage"
+                    value={`${item.slippage.toFixed(2)}%`}
+                  />
+
+                  <HistoryMetric
+                    icon={<Shield size={16} />}
+                    label="Reserve"
+                    value={`${item.allocation.reserve} units`}
+                  />
+
+                  <HistoryMetric
+                    icon={<Coins size={16} />}
+                    label="Rewards"
+                    value={item.rewardsEarned.toFixed(2)}
+                  />
+                </div>
+
+                <div className="history-allocation">
+                  <span>Resource allocation</span>
+
+                  <div className="allocation-breakdown">
+                    <span>Stake: {item.allocation.stake}</span>
+                    <span>Liquidity: {item.allocation.liquidity}</span>
+                    <span>Reserve: {item.allocation.reserve}</span>
+                  </div>
+                </div>
+
+                <div className="history-damage">
+                  <span>Pool damage</span>
+                  <strong>{item.damage.toFixed(2)}</strong>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
 
-        <button className="primary-button restart-button" onClick={onRestart}>
+        <button
+          className="primary-button restart-button"
+          onClick={onRestart}
+        >
           <RotateCcw size={17} />
           Play Again
         </button>
@@ -112,6 +182,27 @@ function ResultStat({
     <div className="result-stat">
       <div>{icon}</div>
       <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function HistoryMetric({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="history-metric">
+      <div className="history-metric-label">
+        {icon}
+        <span>{label}</span>
+      </div>
+
       <strong>{value}</strong>
     </div>
   );

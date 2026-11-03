@@ -5,25 +5,30 @@ import {
   ArrowLeftRight,
   ShieldAlert,
   Sparkles,
+  Lock,
 } from "lucide-react";
 
-import type { MarketEvent as Event } from "../game/game.types";
+import type {
+  MarketEvent as Event,
+  EventType,
+} from "../game/game.types";
 
 interface Props {
   event: Event | null;
   loading?: boolean;
 }
 
-const icons = {
+const icons: Record<EventType, typeof AlertTriangle> = {
   volatility: TrendingDown,
   withdrawal: ArrowLeftRight,
   trade: AlertTriangle,
   attack: ShieldAlert,
+  staking: Lock,
 };
 
 export default function MarketEvent({
   event,
-  loading,
+  loading = false,
 }: Props) {
   if (loading) {
     return (
@@ -38,7 +43,7 @@ export default function MarketEvent({
 
   if (!event) return null;
 
-  const Icon = icons[event.type];
+  const Icon = icons[event.type] ?? AlertTriangle;
 
   const severity =
     event.severity >= 30
@@ -51,6 +56,7 @@ export default function MarketEvent({
     <section className="panel event-panel">
       <div className="event-top">
         <span className="eyebrow">MARKET INTELLIGENCE</span>
+
         <span className={`severity ${severity.toLowerCase()}`}>
           <span /> {severity} SEVERITY
         </span>
@@ -69,6 +75,7 @@ export default function MarketEvent({
 
       <div className="recommendation">
         <Sparkles size={16} />
+
         <div>
           <strong>Strategic insight</strong>
           <p>{event.recommendation}</p>
@@ -77,6 +84,7 @@ export default function MarketEvent({
 
       <div className="event-severity-track">
         <span>MARKET PRESSURE</span>
+
         <div>
           <div
             style={{
@@ -84,6 +92,7 @@ export default function MarketEvent({
             }}
           />
         </div>
+
         <strong>{event.severity}/100</strong>
       </div>
     </section>

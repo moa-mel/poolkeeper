@@ -5,7 +5,8 @@ export type EventType =
   | "volatility"
   | "withdrawal"
   | "trade"
-  | "attack";
+  | "attack"
+  | "staking";
 
 export interface Allocation {
   stake: number;
@@ -19,6 +20,9 @@ export interface GameState {
   liquidity: number;
   staked: number;
   rewards: number;
+  rewardPoolRemaining: number;
+  slippage: number;
+  sustainabilityScore: number;
   energy: number;
   score: number;
   status: GameStatus;
@@ -34,6 +38,11 @@ export interface MarketEvent {
   severity: number;
   type: EventType;
   recommendation: string;
+
+  // Additional market simulation parameters.
+  tradePressure?: number;
+  liquidityShock?: number;
+  rewardMultiplier?: number;
 }
 
 export interface RoundResult {
@@ -44,5 +53,8 @@ export interface RoundResult {
   rewardsEarned: number;
   poolHealth: number;
   liquidity: number;
+  slippage: number;
+  rewardPoolRemaining: number;
+  sustainabilityScore: number;
   score: number;
 }
