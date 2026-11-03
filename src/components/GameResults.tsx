@@ -1,4 +1,3 @@
-
 import {
   Trophy,
   RotateCcw,
@@ -9,6 +8,8 @@ import {
   Waves,
   Shield,
   Percent,
+  Rocket,
+  ExternalLink,
 } from "lucide-react";
 
 import type { GameState } from "../game/game.types";
@@ -33,16 +34,18 @@ export default function GameResults({
           {won ? <Trophy size={38} /> : <ShieldCheck size={38} />}
         </div>
 
-        <span className="eyebrow">MISSION COMPLETE</span>
+        <span className="eyebrow">
+          {won ? "INSTANT LAUNCH GRADUATED" : "MISSION FAILED"}
+        </span>
 
         <h1>
-          {won ? "Pool protected!" : "Pool collapsed"}
+          {won ? "Token graduated!" : "Pool collapsed"}
         </h1>
 
         <p className="results-description">
           {won
-            ? "You survived all five market events and kept your liquidity pool alive."
-            : "Your pool lost all its health before you could complete the mission."}
+            ? "You survived all five market events and reached the simulated 85 SOL Instant Launch graduation target."
+            : "Your bonding curve lost all its health before graduation. Try a different allocation strategy."}
         </p>
 
         <div className="rank-display">
@@ -76,11 +79,49 @@ export default function GameResults({
           />
         </div>
 
+        {/* Strong CTA for Loadout Instant Launch */}
+        <div className="loadout-cta" style={{
+          margin: "2rem 0",
+          padding: "1.5rem",
+          borderRadius: "12px",
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          border: "1px solid #334155",
+          textAlign: "center"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+            <Rocket size={20} />
+            <strong style={{ fontSize: "1.1rem" }}>Ready for the real thing?</strong>
+          </div>
+          <p style={{ marginBottom: "1rem", opacity: 0.9, fontSize: "0.95rem" }}>
+            You just simulated a Loadout Instant Launch.<br />
+            Launch your own game token for real — self-service, no curation required.
+          </p>
+          <a
+            href="https://app.loadout.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="primary-button"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              textDecoration: "none",
+              padding: "0.75rem 1.5rem"
+            }}
+          >
+            Launch on Loadout Instant Launch
+            <ExternalLink size={16} />
+          </a>
+          <p style={{ marginTop: "0.75rem", fontSize: "0.8rem", opacity: 0.7 }}>
+            app.loadout.xyz · Instant Launch · 85 SOL graduation target
+          </p>
+        </div>
+
         <div className="history-section">
           <div className="history-heading">
             <div>
               <h3>Mission history</h3>
-              <p>Round-by-round pool performance and resource allocation.</p>
+              <p>Round-by-round bonding curve performance and resource allocation.</p>
             </div>
 
             <span className="history-count">
@@ -95,16 +136,8 @@ export default function GameResults({
                 key={item.round}
               >
                 <div className="detailed-history-header">
-                  <div>
-                    <span className="round-label">
-                      ROUND {item.round}
-                    </span>
-                    <h4>{item.event}</h4>
-                  </div>
-
-                  <span className="round-health">
-                    {item.poolHealth.toFixed(1)}% health
-                  </span>
+                  <strong>Round {item.round}</strong>
+                  <span>{item.event}</span>
                 </div>
 
                 <div className="history-metrics">
@@ -137,9 +170,9 @@ export default function GameResults({
                   <span>Resource allocation</span>
 
                   <div className="allocation-breakdown">
-                    <span>Stake: {item.allocation.stake}</span>
-                    <span>Liquidity: {item.allocation.liquidity}</span>
-                    <span>Reserve: {item.allocation.reserve}</span>
+                    <span>Buyback/Stake: {item.allocation.stake}</span>
+                    <span>Curve Liquidity: {item.allocation.liquidity}</span>
+                    <span>Anti-Snipe: {item.allocation.reserve}</span>
                   </div>
                 </div>
 
@@ -163,6 +196,7 @@ export default function GameResults({
         <p className="simulation-note">
           All scores, energy and rewards are simulated.
           No real assets were deposited or earned.
+          This is an educational demo of Loadout Instant Launch mechanics.
         </p>
       </div>
     </main>

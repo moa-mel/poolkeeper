@@ -1,4 +1,3 @@
-
 import {
   Shield,
   Waves,
@@ -25,21 +24,22 @@ export default function Home({ onStart, loading }: Props) {
           <div className="hero-copy">
             <div className="hero-badge">
               <span className="live-indicator" />
-              STRATEGIC LIQUIDITY SIMULATOR
+              LOADOUT INSTANT LAUNCH SIMULATOR
             </div>
 
             <h1>
-              DEFEND YOUR
+              SURVIVE THE
               <br />
-              <span>LIQUIDITY.</span>
+              <span>BONDING CURVE.</span>
               <br />
-              OWN THE MARKET.
+              GRADUATE THE TOKEN.
             </h1>
 
             <p>
-              Every decision matters. Stake your resources,
-              strengthen your liquidity and survive five
-              unpredictable market events.
+              Manage liquidity depth, anti-snipe protection and studio
+              allocations through five market rounds. Reach the 85 SOL
+              Instant Launch graduation target — just like a real launch
+              on Loadout.
             </p>
 
             <button
@@ -47,100 +47,98 @@ export default function Home({ onStart, loading }: Props) {
               onClick={onStart}
               disabled={loading}
             >
-              {loading ? "Preparing mission..." : "Start Mission"}
+              {loading ? "Preparing launch..." : "Start Instant Launch Simulation"}
               <ArrowRight size={19} />
             </button>
 
             <div className="hero-footnote">
               <Shield size={15} />
-              No wallet required · Free simulation
+              No wallet required · Free simulation of Loadout Instant Launch
             </div>
           </div>
 
-          
-<div className="hero-visual product-preview">
-  <div className="preview-header">
-    <div>
-      <span>POOL OVERVIEW</span>
-      <strong>Liquidity dashboard</strong>
-    </div>
-    <span className="preview-status">
-      <span className="live-indicator" />
-      HEALTHY
-    </span>
-  </div>
+          <div className="hero-visual product-preview">
+            <div className="preview-header">
+              <div>
+                <span>INSTANT LAUNCH OVERVIEW</span>
+                <strong>Bonding curve dashboard</strong>
+              </div>
+              <span className="preview-status">
+                <span className="live-indicator" />
+                HEALTHY
+              </span>
+            </div>
 
-  <div className="preview-metrics">
-    <div>
-      <span>Pool health</span>
-      <strong>98.4%</strong>
-      <small>+2.4% this round</small>
-    </div>
-    <div>
-      <span>Liquidity depth</span>
-      <strong>1,240</strong>
-      <small>Simulation units</small>
-    </div>
-  </div>
+            <div className="preview-metrics">
+              <div>
+                <span>Pool health</span>
+                <strong>98.4%</strong>
+                <small>+2.4% this round</small>
+              </div>
+              <div>
+                <span>Curve liquidity</span>
+                <strong>1,240</strong>
+                <small>Simulation units</small>
+              </div>
+            </div>
 
-  <div className="preview-allocation">
-    <div className="preview-allocation-heading">
-      <strong>Resource allocation</strong>
-      <span>100 units</span>
-    </div>
+            <div className="preview-allocation">
+              <div className="preview-allocation-heading">
+                <strong>Resource allocation</strong>
+                <span>100 units</span>
+              </div>
 
-    <div className="preview-bar">
-      <span style={{ width: "40%" }} />
-      <span style={{ width: "40%" }} />
-      <span style={{ width: "20%" }} />
-    </div>
+              <div className="preview-bar">
+                <span style={{ width: "35%" }} />
+                <span style={{ width: "40%" }} />
+                <span style={{ width: "25%" }} />
+              </div>
 
-    <div className="preview-legend">
-      <span>● Stake 40%</span>
-      <span>● Liquidity 40%</span>
-      <span>● Reserve 20%</span>
-    </div>
-  </div>
+              <div className="preview-legend">
+                <span>● Buyback / Stake 35%</span>
+                <span>● Curve Liquidity 40%</span>
+                <span>● Anti-Snipe 25%</span>
+              </div>
+            </div>
 
-  <div className="preview-event">
-    <div className="preview-event-icon">
-      <Activity size={17} />
-    </div>
-    <div>
-      <small>LATEST MARKET EVENT</small>
-      <strong>Market conditions stable</strong>
-    </div>
-    <span>LOW RISK</span>
-  </div>
-</div>
-
+            <div className="preview-event">
+              <div className="preview-event-icon">
+                <Activity size={17} />
+              </div>
+              <div>
+                <small>LATEST MARKET EVENT</small>
+                <strong>Anti-snipe window active</strong>
+              </div>
+              <span>PROTECTED</span>
+            </div>
+          </div>
         </div>
 
         <section className="how-section">
           <div className="section-heading">
             <span className="eyebrow">YOUR STRATEGY</span>
-            <h2>Three ways to survive.</h2>
+            <h2>Three levers of an Instant Launch.</h2>
           </div>
 
           <div className="feature-grid">
             <Feature
               icon={<Lock />}
-              title="Stake"
-              description="Allocate resources to staking and accumulate simulated rewards."
+              title="Studio Buyback / Staking"
+              description="Allocate to buybacks or staker rewards. Protects long-term value after graduation."
               color="green"
             />
 
             <Feature
               icon={<Waves />}
-              title="Provide liquidity"
-              description="Strengthen pool depth and reduce the impact of market pressure."
+              title="Bonding Curve Liquidity"
+              description="Keep depth high and slippage low so the curve can reach the 85 SOL graduation target."
               color="blue"
             />
 
             <Feature
               icon={<Zap />}
-              title="Keep reserves"
-              description="Protect your pool when unexpected market events strike."
+              title="Anti-Snipe Protection"
+              description="Absorb sudden pressure and snipe attacks during the early protection window."
               color="amber"
             />
           </div>
@@ -149,21 +147,21 @@ export default function Home({ onStart, loading }: Props) {
         <section className="mission-banner">
           <div>
             <span className="eyebrow">YOUR MISSION</span>
-            <h2>Survive five rounds. Protect the pool.</h2>
+            <h2>Survive five rounds. Graduate the token.</h2>
             <p>
-              Balance growth, liquidity and protection.
-              There is no perfect strategy.
+              Balance liquidity, protection and buyback allocation.
+              Reach the Instant Launch graduation target.
             </p>
           </div>
 
           <button onClick={onStart} disabled={loading}>
-            Enter the arena <ArrowRight size={17} />
+            Start simulation <ArrowRight size={17} />
           </button>
         </section>
 
         <footer className="app-footer">
           <span>POOLKEEPER © 2026</span>
-          <span>INSPIRED BY THE LOADOUT ECOSYSTEM</span>
+          <span>BUILT TO SHOWCASE LOADOUT INSTANT LAUNCH</span>
           <span>SIMULATION ONLY</span>
         </footer>
       </main>

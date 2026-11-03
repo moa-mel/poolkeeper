@@ -1,4 +1,3 @@
-
 import type { MarketEvent, RoundResult } from "./game.types";
 
 export const MARKET_EVENTS: MarketEvent[] = [
@@ -6,62 +5,62 @@ export const MARKET_EVENTS: MarketEvent[] = [
     id: "staking-demand",
     title: "Staking Demand Surge",
     description:
-      "More participants are committing assets to staking. Rewards are attractive, but too much capital leaving available liquidity could weaken the pool.",
+      "Traders are locking tokens into the staking vault. Attractive rewards are pulling capital, but too much leaving the bonding curve could slow progress toward the 85 SOL graduation target.",
     severity: 12,
     type: "staking",
     tradePressure: 5,
     liquidityShock: 4,
     rewardMultiplier: 1.25,
     recommendation:
-      "Take advantage of staking rewards without sacrificing too much available liquidity.",
+      "Allocate some energy to the Studio Buyback / Staking Reserve while keeping enough on the curve.",
   },
   {
     id: "volatility",
-    title: "Market Volatility",
+    title: "Market Volatility Spike",
     description:
-      "Sudden price movements are putting pressure on the ecosystem. Your reserves will determine how much damage the pool absorbs.",
+      "Sudden price swings are hitting the bonding curve. Your anti-snipe protection and reserves will determine how much damage the pool absorbs.",
     severity: 25,
     type: "volatility",
     tradePressure: 18,
     liquidityShock: 5,
     recommendation:
-      "Maintain sufficient reserves to absorb market volatility.",
+      "Maintain sufficient Anti-Snipe Protection to absorb volatility during the protection window.",
   },
   {
     id: "withdrawal",
     title: "Whale Withdrawal",
     description:
-      "A large liquidity provider is withdrawing assets, reducing available liquidity and increasing market pressure.",
+      "A large holder is selling into the curve, reducing available liquidity and increasing slippage. Graduation progress is at risk.",
     severity: 30,
     type: "withdrawal",
     tradePressure: 24,
     liquidityShock: 18,
     recommendation:
-      "Prioritise available liquidity and use reserves to protect pool stability.",
+      "Prioritise Bonding Curve Liquidity and use Anti-Snipe reserves to protect stability.",
   },
   {
     id: "trade",
     title: "Large Market Trade",
     description:
-      "A large trade is moving through the market. Insufficient liquidity could cause significant slippage.",
+      "A sizeable trade is moving through the bonding curve. Insufficient depth will cause high slippage and hurt graduation momentum.",
     severity: 22,
     type: "trade",
     tradePressure: 35,
     liquidityShock: 8,
     recommendation:
-      "Increase liquidity to reduce the impact of large trades.",
+      "Increase Bonding Curve Liquidity to reduce the impact of large trades.",
   },
   {
     id: "attack",
-    title: "Liquidity Crisis",
+    title: "Snipe Attack",
     description:
-      "Aggressive market activity is threatening the pool. Poor allocation decisions could leave the ecosystem vulnerable.",
+      "Aggressive bots are attempting to snipe the early curve. Strong Anti-Snipe Protection is critical to keep the Instant Launch healthy.",
     severity: 35,
     type: "attack",
     tradePressure: 40,
     liquidityShock: 15,
     recommendation:
-      "Use your reserves strategically and maintain enough liquidity to withstand market pressure.",
+      "Deploy Anti-Snipe Protection strategically and keep enough curve liquidity to withstand pressure.",
   },
 ];
 
@@ -79,34 +78,16 @@ export function getRandomEvent(
     (result) => result.event === "Whale Withdrawal"
   );
 
-  if (
-    round >= 3 &&
-    !hasExperiencedWithdrawal &&
-    whaleWithdrawal
-  ) {
-    return { ...whaleWithdrawal };
+  if (round >= 3 && whaleWithdrawal && !hasExperiencedWithdrawal) {
+    return whaleWithdrawal;
   }
 
-  // Otherwise, select a random event.
-  const availableEvents = MARKET_EVENTS.filter(
-    (event) => {
-      // Avoid repeating the previous event.
-      const previousEvent = history[history.length - 1];
+  // Simple weighted random selection for the rest.
+  const available = MARKET_EVENTS.filter((e) => {
+    if (round < 3 && e.id === "withdrawal") return false;
+    return true;
+  });
 
-      return (
-        !previousEvent ||
-        previousEvent.event !== event.title
-      );
-    }
-  );
-
-  const events =
-    availableEvents.length > 0
-      ? availableEvents
-      : MARKET_EVENTS;
-
-  const index = Math.floor(Math.random() * events.length);
-
-  return { ...events[index] };
+  const index = Math.floor(Math.random() * available.length);
+  return available[index];
 }
-
