@@ -15,19 +15,6 @@ export const MARKET_EVENTS: MarketEvent[] = [
       "Allocate some energy to staking while maintaining sufficient curve liquidity.",
   },
   {
-    id: "staking-demand",
-    title: "Staking Demand Surge",
-    description:
-      "Traders are locking tokens into the staking vault. Attractive rewards are pulling capital, but too much leaving the bonding curve could slow progress toward the 85 SOL graduation target.",
-    severity: 12,
-    type: "staking",
-    tradePressure: 5,
-    liquidityShock: 4,
-    rewardMultiplier: 1.25,
-    recommendation:
-      "Allocate some energy to the Studio Buyback / Staking Reserve while keeping enough on the curve.",
-  },
-  {
     id: "volatility",
     title: "Market Volatility Spike",
     description:

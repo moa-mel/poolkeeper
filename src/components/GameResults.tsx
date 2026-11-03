@@ -62,7 +62,7 @@ export default function GameResults({
           <ResultStat
             icon={<Trophy />}
             label="FINAL SCORE"
-            value={game.score.toLocaleString()}
+             value={`${game.graduationSol.toFixed(1)} / 85 SOL`}
           />
 
           <ResultStat
