@@ -1,4 +1,3 @@
-
 export type GameStatus = "idle" | "playing" | "won" | "lost";
 
 export type EventType =
@@ -18,6 +17,7 @@ export interface GameState {
   round: number;
   poolHealth: number;
   liquidity: number;
+  graduationSol: number;
   staked: number;
   rewards: number;
   rewardPoolRemaining: number;
@@ -38,11 +38,10 @@ export interface MarketEvent {
   severity: number;
   type: EventType;
   recommendation: string;
-
-  // Additional market simulation parameters.
   tradePressure?: number;
   liquidityShock?: number;
   rewardMultiplier?: number;
+  graduationDemand?: number;
 }
 
 export interface RoundResult {
@@ -54,6 +53,7 @@ export interface RoundResult {
   poolHealth: number;
   liquidity: number;
   slippage: number;
+  graduationSol: number;
   rewardPoolRemaining: number;
   sustainabilityScore: number;
   score: number;

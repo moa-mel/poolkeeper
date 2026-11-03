@@ -122,9 +122,9 @@ export default function CrisisMode({
       otherTotal === 0
         ? Math.floor(remaining / 2)
         : Math.round(
-            (game.allocation[otherKeys[0]] / otherTotal) *
-              remaining,
-          );
+          (game.allocation[otherKeys[0]] / otherTotal) *
+          remaining,
+        );
 
     setGame((current) => ({
       ...current,
@@ -138,64 +138,85 @@ export default function CrisisMode({
   }
 
   function resolveCrisis() {
-    if (game.status !== "playing") return;
+    setGame((current) => {
+      if (current.status !== "playing") return current;
 
-    const { allocation, currentCrisis } = game;
+      const { allocation, currentCrisis } = current;
 
-    // Spend allocated treasury units on the chosen response.
-    const spent =
-      allocation.liquidity * 0.25 +
-      allocation.reserve * 0.2 +
-      allocation.buyback * 0.3;
+      const spent =
+        allocation.liquidity * 0.08 +
+        allocation.reserve * 0.04 +
+        allocation.buyback * 0.1;
 
-    const treasury = clamp(game.treasury - spent);
-
-    const liquidity =
-      clamp(
-        game.liquidity +
-          allocation.liquidity * 0.35 -
-          currentCrisis.liquidityShock,
+      const treasury = Number(
+        clamp(current.treasury - spent).toFixed(2)
       );
 
-    const protection =
-      allocation.reserve * 0.35 +
-      allocation.liquidity * 0.12 +
-      allocation.buyback * 0.08;
+      const liquidity = Number(
+        clamp(
+          current.liquidity +
+          allocation.liquidity * 0.35 -
+          currentCrisis.liquidityShock
+        ).toFixed(2)
+      );
 
-    const pressureDamage =
-      currentCrisis.severity +
-      currentCrisis.sellPressure / Math.max(liquidity, 1) * 12;
+      const protection =
+        allocation.reserve * 0.35 +
+        allocation.liquidity * 0.12 +
+        allocation.buyback * 0.08;
 
-    const damage = Math.max(0, pressureDamage - protection);
-    const health = clamp(game.health - damage);
+      const pressureDamage =
+        currentCrisis.severity +
+        (currentCrisis.sellPressure / Math.max(liquidity, 1)) * 12;
 
-    const roundScore = Math.round(
-      health * 2 +
+      const damage = Number(
+        Math.max(0, pressureDamage - protection).toFixed(2)
+      );
+
+      const health = Number(
+        clamp(current.health - damage).toFixed(2)
+      );
+
+      const roundScore = Math.round(
+        health * 2 +
         liquidity * 1.5 +
         treasury +
-        Math.max(0, 100 - spent) * 0.5,
-    );
+        Math.max(0, 100 - spent) * 0.5
+      );
 
-    const nextRound = game.round + 1;
-    const isLost = health <= 0 || liquidity <= 0 || treasury <= 0;
-    const isWon = nextRound > CRISES.length && !isLost;
+      const history = [
+        ...current.history,
+        `Round ${current.round} — ${currentCrisis.title}: -${Math.round(
+          damage
+        )} health, ${spent.toFixed(1)} treasury spent`,
+      ];
 
-    const history = [
-      ...game.history,
-      `${currentCrisis.title}: −${Math.round(damage)} health`,
-    ];
+      const isLost =
+        health <= 0 ||
+        liquidity <= 0 ||
+        treasury <= 0;
 
-    setGame({
-      ...game,
-      health,
-      liquidity,
-      treasury,
-      score: game.score + roundScore,
-      history,
-      status: isLost ? "lost" : isWon ? "won" : "playing",
-      round: isWon || isLost ? game.round : nextRound,
-      currentCrisis: CRISES[Math.min(nextRound - 1, CRISES.length - 1)],
-      allocation: INITIAL_ALLOCATION,
+      const roundsComplete =
+        current.round >= CRISES.length;
+
+      const isWon = roundsComplete && !isLost;
+
+      return {
+        ...current,
+        health,
+        liquidity,
+        treasury,
+        score: current.score + roundScore,
+        history,
+        status: isLost ? "lost" : isWon ? "won" : "playing",
+        round:
+          isLost || isWon
+            ? current.round
+            : current.round + 1,
+        currentCrisis:
+          CRISES[Math.min(current.round, CRISES.length - 1)],
+        allocation: { ...INITIAL_ALLOCATION },
+      };
     });
   }
 

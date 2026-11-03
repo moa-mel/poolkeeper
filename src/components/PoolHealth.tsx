@@ -1,11 +1,12 @@
 
-import { Activity, Coins, Waves } from "lucide-react";
+import { Activity, Coins, Waves, Rocket } from "lucide-react";
 
-interface Props {
+interface PoolHealthProps {
   health: number;
   liquidity: number;
   rewards: number;
   staked: number;
+  graduationSol: number;
 }
 
 export default function PoolHealth({
@@ -13,8 +14,19 @@ export default function PoolHealth({
   liquidity,
   rewards,
   staked,
-}: Props) {
+  graduationSol,
+}: PoolHealthProps) {
+  const GRADUATION_TARGET = 85;
+
   const safeHealth = Math.max(0, Math.min(100, health));
+
+  const safeGraduation = Math.max(
+    0,
+    Math.min(GRADUATION_TARGET, graduationSol)
+  );
+
+  const graduationPercent =
+    (safeGraduation / GRADUATION_TARGET) * 100;
 
   return (
     <section className="stats-grid">
@@ -25,7 +37,7 @@ export default function PoolHealth({
         </div>
 
         <div className="health-value">
-          {safeHealth}<small>%</small>
+          {safeHealth.toFixed(0)}<small>%</small>
         </div>
 
         <div className="health-track">
@@ -75,6 +87,31 @@ export default function PoolHealth({
           +{rewards.toFixed(2)}
         </div>
         <span className="stat-caption">Simulated rewards</span>
+      </div>
+
+      <div className="stat-card graduation-card">
+        <div className="stat-heading">
+          <span>GRADUATION PROGRESS</span>
+          <Rocket size={17} />
+        </div>
+
+        <div className="stat-value">
+          {safeGraduation.toFixed(1)}
+          <small> / {GRADUATION_TARGET} SOL</small>
+        </div>
+
+        <div className="health-track">
+          <div
+            className="health-fill"
+            style={{ width: `${graduationPercent}%` }}
+          />
+        </div>
+
+        <span className="stat-caption">
+          {graduationPercent >= 100
+            ? "Graduation target reached!"
+            : `${graduationPercent.toFixed(1)}% towards graduation`}
+        </span>
       </div>
     </section>
   );

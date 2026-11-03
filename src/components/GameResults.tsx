@@ -38,23 +38,19 @@ export default function GameResults({
         </span>
 
         <h1>
-          {won ? "Strong graduation path found" : "This allocation path collapsed"}
+          {won
+            ? "Token graduated!"
+            : game.poolHealth <= 0 || game.liquidity <= 0
+              ? "Pool collapsed"
+              : "Graduation target missed"}
         </h1>
 
         <p className="results-description">
           {won
-            ? "Your strategy survived all pressure events and maintained a healthy path to the 85 SOL Instant Launch target."
-            : "This allocation strategy could not protect the bonding curve. Try a more defensive mix next time."}
-        </p>
-
-        <h1>
-          {won ? "Token graduated!" : "Pool collapsed"}
-        </h1>
-
-        <p className="results-description">
-          {won
-            ? "You survived all five market events and reached the simulated 85 SOL Instant Launch graduation target."
-            : "Your bonding curve lost all its health before graduation. Try a different allocation strategy."}
+            ? "You survived all five market events and reached the simulated 85 SOL graduation target."
+            : game.poolHealth <= 0 || game.liquidity <= 0
+              ? "Your pool lost its health or liquidity before graduation."
+              : "You survived all five rounds, but your simulated graduation progress did not reach 85 SOL."}
         </p>
 
         <div className="rank-display">

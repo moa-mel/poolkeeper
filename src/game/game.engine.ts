@@ -1,4 +1,3 @@
-
 import type {
   Allocation,
   GameState,
@@ -7,6 +6,7 @@ import type {
 } from "./game.types";
 
 import {
+  GRADUATION_TARGET_SOL,
   INITIAL_ALLOCATION,
   ROUND_REWARD_EMISSION,
   TOTAL_ENERGY,
@@ -29,16 +29,11 @@ export function validateAllocation(
         Number.isInteger(value) &&
         value >= 0
     ) &&
-    values.reduce((sum, value) => sum + value, 0) ===
-    TOTAL_ENERGY
+    values.reduce((sum, value) => sum + value, 0) === TOTAL_ENERGY
   );
 }
 
-function clamp(
-  value: number,
-  min: number,
-  max: number
-): number {
+function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
@@ -48,10 +43,13 @@ function calculateSlippage(
 ): number {
   if (liquidity <= 0) return 50;
 
-  const slippage =
-    (tradePressure / (liquidity + tradePressure)) * 100;
-
-  return Number(clamp(slippage, 0, 50).toFixed(2));
+  return Number(
+    clamp(
+      (tradePressure / (liquidity + tradePressure)) * 100,
+      0,
+      50
+    ).toFixed(2)
+  );
 }
 
 function calculateSustainability(
@@ -61,26 +59,19 @@ function calculateSustainability(
   reserveAllocation: number
 ): number {
   const liquidityHealth = clamp(liquidity, 0, 100);
+  const slippageHealth = 100 - clamp(slippage * 4, 0, 100);
+  const reserveHealth = clamp(reserveAllocation * 2.5, 0, 100);
 
-  const slippageHealth = 100 - clamp(
-    slippage * 4,
-    0,
-    100
+  return Math.round(
+    clamp(
+      poolHealth * 0.4 +
+        liquidityHealth * 0.25 +
+        slippageHealth * 0.25 +
+        reserveHealth * 0.1,
+      0,
+      100
+    )
   );
-
-  const reserveHealth = clamp(
-    reserveAllocation * 2.5,
-    0,
-    100
-  );
-
-  const sustainability =
-    poolHealth * 0.4 +
-    liquidityHealth * 0.25 +
-    slippageHealth * 0.25 +
-    reserveHealth * 0.1;
-
-  return Math.round(clamp(sustainability, 0, 100));
 }
 
 export function processRound(
@@ -89,9 +80,7 @@ export function processRound(
   event: MarketEvent
 ): GameState {
   if (!validateAllocation(allocation)) {
-    throw new Error(
-      "Your allocation must equal 100 energy units."
-    );
+    throw new Error("Your allocation must equal 100 energy units.");
   }
 
   if (state.status !== "playing") {
@@ -102,13 +91,10 @@ export function processRound(
     throw new Error("All game rounds have been completed.");
   }
 
-  // 1. Calculate staking rewards.
-  // Rewards are game credits, not actual LOAD tokens.
-  const rewardMultiplier = event.rewardMultiplier ?? 1;
-
+  // Simulated rewards, not real tokens.
   const availableEmission = Math.min(
     state.rewardPoolRemaining,
-    ROUND_REWARD_EMISSION * rewardMultiplier
+    ROUND_REWARD_EMISSION * (event.rewardMultiplier ?? 1)
   );
 
   const rewardsEarned = Number(
@@ -119,57 +105,44 @@ export function processRound(
   );
 
   const rewardPoolRemaining = Number(
-    Math.max(
-      0,
-      state.rewardPoolRemaining - rewardsEarned
-    ).toFixed(2)
+    Math.max(0, state.rewardPoolRemaining - rewardsEarned).toFixed(2)
   );
 
   const rewards = Number(
     (state.rewards + rewardsEarned).toFixed(2)
   );
 
-  // 2. Calculate liquidity changes.
+  // Liquidity changes.
   const liquidityAdded = allocation.liquidity * 0.3;
-
-  const liquidityShock = event.liquidityShock ?? 0;
 
   const liquidity = Number(
     Math.max(
       0,
-      state.liquidity + liquidityAdded - liquidityShock
+      state.liquidity +
+        liquidityAdded -
+        (event.liquidityShock ?? 0)
     ).toFixed(2)
   );
 
-  // 3. Calculate slippage using available liquidity.
   const tradePressure = event.tradePressure ?? 10;
-
-  console.log("EVENT BEING PROCESSED:", {
-    title: event.title,
-    tradePressure: event.tradePressure,
-    liquidityShock: event.liquidityShock,
-    liquidity,
-  });
 
   const slippage = calculateSlippage(
     tradePressure,
     liquidity
   );
 
-  // 4. Calculate protection against market damage.
+  // Pool protection.
   const reserveProtection = allocation.reserve * 0.45;
-
   const liquidityProtection = allocation.liquidity * 0.12;
-
   const slippageDamage = slippage * 0.15;
 
   const damage = Number(
     Math.max(
       0,
       event.severity +
-      slippageDamage -
-      reserveProtection -
-      liquidityProtection
+        slippageDamage -
+        reserveProtection -
+        liquidityProtection
     ).toFixed(2)
   );
 
@@ -177,12 +150,37 @@ export function processRound(
     clamp(state.poolHealth - damage, 0, 100).toFixed(2)
   );
 
-  // 5. Track cumulative staking allocation.
+  // Simulated graduation progress.
+  const baseDemand =
+    event.graduationDemand ?? tradePressure * 0.5;
+
+  const allocationBoost =
+    allocation.liquidity * 0.12 +
+    allocation.stake * 0.04;
+
+  const marketImpact =
+    slippage * 0.12 +
+    (event.liquidityShock ?? 0) * 0.08 +
+    damage * 0.04;
+
+  const graduationThisRound = Number(
+    Math.max(
+      0,
+      baseDemand + allocationBoost - marketImpact
+    ).toFixed(2)
+  );
+
+  const graduationSol = Number(
+    Math.min(
+      GRADUATION_TARGET_SOL,
+      state.graduationSol + graduationThisRound
+    ).toFixed(2)
+  );
+
   const staked = Number(
     (state.staked + allocation.stake).toFixed(2)
   );
 
-  // 6. Calculate sustainability.
   const sustainabilityScore = calculateSustainability(
     poolHealth,
     liquidity,
@@ -190,18 +188,16 @@ export function processRound(
     allocation.reserve
   );
 
-
-  // 7. Score the round.
   const roundScore = Math.round(
     poolHealth * 4 +
-    Math.min(liquidity, 100) * 2 +
-    rewardsEarned * 10 +
-    sustainabilityScore * 3
+      Math.min(liquidity, 100) * 2 +
+      rewardsEarned * 10 +
+      sustainabilityScore * 3 +
+      graduationThisRound * 5
   );
 
   const score = state.score + roundScore;
 
-  // 8. Record the round.
   const result: RoundResult = {
     round: state.round,
     event: event.title,
@@ -211,6 +207,7 @@ export function processRound(
     poolHealth,
     liquidity,
     slippage,
+    graduationSol,
     rewardPoolRemaining,
     sustainabilityScore,
     score,
@@ -219,18 +216,34 @@ export function processRound(
   const history = [...state.history, result];
 
   const isLost = poolHealth <= 0 || liquidity <= 0;
+  const roundsComplete = history.length >= TOTAL_ROUNDS;
+
+  const reachedGraduation =
+    graduationSol >= GRADUATION_TARGET_SOL;
 
   const isWon =
-    history.length >= TOTAL_ROUNDS && !isLost;
+    roundsComplete &&
+    reachedGraduation &&
+    !isLost;
+
+  const status =
+    isLost
+      ? "lost"
+      : isWon
+        ? "won"
+        : roundsComplete
+          ? "lost"
+          : "playing";
 
   return {
     ...state,
     round:
-      isWon || isLost
-        ? state.round
-        : state.round + 1,
+      status === "playing"
+        ? state.round + 1
+        : state.round,
     poolHealth,
     liquidity,
+    graduationSol,
     staked,
     rewards,
     rewardPoolRemaining,
@@ -238,11 +251,7 @@ export function processRound(
     sustainabilityScore,
     energy: TOTAL_ENERGY,
     score,
-    status: isLost
-      ? "lost"
-      : isWon
-        ? "won"
-        : "playing",
+    status,
     currentEvent: null,
     allocation: { ...INITIAL_ALLOCATION },
     history,

@@ -55,6 +55,7 @@ export default function Game() {
           liquidity={game.liquidity}
           rewards={game.rewards}
           staked={game.staked}
+          graduationSol={game.graduationSol}
         />
 
         <div className="game-layout">

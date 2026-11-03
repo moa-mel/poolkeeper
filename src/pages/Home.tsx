@@ -29,18 +29,12 @@ export default function Home({ onStart, onStartCrisis, loading }: Props) {
             </div>
 
             <h1>
-              SURVIVE THE
-              <br />
-              <span>BONDING CURVE.</span>
-              <br />
-              GRADUATE THE TOKEN.
+              Build a strategy. Survive the market.
             </h1>
 
             <p>
-              Manage liquidity depth, anti-snipe protection and studio
-              allocations through five market rounds. Reach the 85 SOL
-              Instant Launch graduation target — just like a real launch
-              on Loadout.
+              Test how liquidity, staking and reserves affect a simulated
+              token launch across changing market conditions.
             </p>
 
             <button
